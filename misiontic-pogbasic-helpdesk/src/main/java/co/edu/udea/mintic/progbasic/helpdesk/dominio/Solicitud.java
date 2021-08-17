@@ -25,4 +25,8 @@ public class Solicitud {
         this.descripcion = descripcion;
     }
     
+    public void setEmpleadoAsignado(Empleado empleadoAsignado) {
+        this.empleadoAsignado = empleadoAsignado;
+    }
+    
 }
