@@ -23,4 +23,8 @@ public class Actividad {
         this.encargado = encargado;
     }
     
+    public Empleado getEncargado() {
+        return encargado;
+    }
+    
 }

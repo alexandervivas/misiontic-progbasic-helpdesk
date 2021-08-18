@@ -11,18 +11,22 @@ package co.edu.udea.mintic.progbasic.helpdesk.dominio;
  */
 public class Empleado extends Persona {
     
-    private String rol;
+    private RolEmpleado rol;
     
     public Empleado(String id, String nombre, String correo) {
         super(id, nombre, correo);
     }
     
-    public Empleado(String id, String nombre, String correo, String rol) {
+    public Empleado(String id, String nombre, String correo, RolEmpleado rol) {
         super(id, nombre, correo);
         this.rol = rol;
     }
     
-    public void setRol(String rol) {
+    public RolEmpleado getRol() {
+        return rol;
+    }
+    
+    public void setRol(RolEmpleado rol) {
         this.rol = rol;
     }
     
