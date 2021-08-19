@@ -14,27 +14,35 @@
  * DateTime: DATE
  */
 CREATE TABLE usuarios (
-    id_usuario MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    cedula VARCHAR(12),
-    nombre VARCHAR(100) NOT NULL,
-    correo VARCHAR(150)
-);
-
-CREATE TABLE empleados (
-    id_empleado MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_usuario MEDIUMINT NOT NULL AUTO_INCREMENT,
     cedula VARCHAR(12),
     nombre VARCHAR(100) NOT NULL,
     correo VARCHAR(150),
-    rol VARCHAR(15)
+    CONSTRAINT pk_usuarios 
+        PRIMARY KEY(id_usuario)
+);
+
+CREATE TABLE empleados (
+    id_empleado MEDIUMINT NOT NULL AUTO_INCREMENT,
+    cedula VARCHAR(12),
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(150),
+    rol VARCHAR(15),
+    CONSTRAINT pk_empleados 
+        PRIMARY KEY(id_empleado)
 );
 
 CREATE TABLE solicitudes (
-    id_solicitud MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_solicitud MEDIUMINT NOT NULL AUTO_INCREMENT,
     titulo VARCHAR(100) NOT NULL,
     descripcion TEXT NOT NULL,
     correo VARCHAR(150),
     usuario_creador MEDIUMINT NOT NULL,
-    FOREIGN KEY (usuario_creador) REFERENCES usuarios(id_usuario)
+    CONSTRAINT pk_solicitudes 
+        PRIMARY KEY(id_solicitud),
+    CONSTRAINT fk_solicitudes_usuarios 
+        FOREIGN KEY (usuario_creador) 
+        REFERENCES usuarios(id_usuario)
 );
 
 CREATE TABLE actividades (
@@ -43,7 +51,12 @@ CREATE TABLE actividades (
     id_solicitud MEDIUMINT NOT NULL,
     descripcion TEXT NOT NULL,
     fecha DATE NOT NULL,
-    PRIMARY KEY(id_actividad, id_empleado, id_solicitud),
-    FOREIGN KEY (id_empleado) REFERENCES empleados(id_empleado),
-    FOREIGN KEY (id_solicitud) REFERENCES solicitudes(id_solicitud)
+    CONSTRAINT pk_actividades 
+        PRIMARY KEY(id_actividad, id_empleado, id_solicitud),
+    CONSTRAINT fk_actividades_empleados 
+        FOREIGN KEY (id_empleado) 
+        REFERENCES empleados(id_empleado),
+    CONSTRAINT fk_actividades_solicitudes 
+        FOREIGN KEY (id_solicitud) 
+        REFERENCES solicitudes(id_solicitud)
 );
