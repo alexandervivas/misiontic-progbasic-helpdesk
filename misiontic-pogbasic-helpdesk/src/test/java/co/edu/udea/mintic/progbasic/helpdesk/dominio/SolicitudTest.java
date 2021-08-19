@@ -5,8 +5,8 @@
  */
 package co.edu.udea.mintic.progbasic.helpdesk.dominio;
 
-import co.edu.udea.mintic.progbasic.helpdesk.excepciones.PrivilegiosInsuficientesException;
-import co.edu.udea.mintic.progbasic.helpdesk.excepciones.SolicitudNoModificableException;
+import co.edu.udea.mintic.progbasic.helpdesk.excepciones.solicitud.PrivilegiosInsuficientesException;
+import co.edu.udea.mintic.progbasic.helpdesk.excepciones.solicitud.SolicitudNoModificableException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Assert;

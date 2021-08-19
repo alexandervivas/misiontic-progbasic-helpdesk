@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.edu.udea.mintic.progbasic.helpdesk.excepciones;
+package co.edu.udea.mintic.progbasic.helpdesk.dominio.eventos;
 
 /**
  *
  * @author alexandervivas
  */
-public class SolicitudNoModificableException extends Exception {
-
-    public SolicitudNoModificableException(String mensaje) {
-        super(mensaje);
-    }
+public enum EventoSolicitudTipo {
+    
+    SOLICITUD_CREADA, SOLICITUD_ACTUALIZADA, SOLICITUD_ELIMINADA
     
 }

@@ -5,8 +5,8 @@
  */
 package co.edu.udea.mintic.progbasic.helpdesk.dominio;
 
-import co.edu.udea.mintic.progbasic.helpdesk.excepciones.PrivilegiosInsuficientesException;
-import co.edu.udea.mintic.progbasic.helpdesk.excepciones.SolicitudNoModificableException;
+import co.edu.udea.mintic.progbasic.helpdesk.excepciones.solicitud.PrivilegiosInsuficientesException;
+import co.edu.udea.mintic.progbasic.helpdesk.excepciones.solicitud.SolicitudNoModificableException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class Solicitud {
     
     public void setEmpleadoAsignado(Empleado empleadoAsignado) throws SolicitudNoModificableException {
         if(estado == EstadoSolicitud.FINALIZADA) {
-            throw new SolicitudNoModificableException("La solicitud " + id + " no se puede reasignar puesto que ya se encuentra finalizada.");
+            throw new SolicitudNoModificableException("La solicitud " + getId() + " no se puede reasignar puesto que ya se encuentra finalizada.");
         }
         estado = EstadoSolicitud.ASIGNADA;
         this.empleadoAsignado = empleadoAsignado;
@@ -57,24 +57,76 @@ public class Solicitud {
     
     public void agregarActividad(Actividad actividad) throws SolicitudNoModificableException, PrivilegiosInsuficientesException {
         if(estado == EstadoSolicitud.FINALIZADA) {
-            throw new SolicitudNoModificableException("La solicitud " + id + " ya se encuentra finalizada, por lo tanto no se pueden ejecutar más actividades sobre ella.");
+            throw new SolicitudNoModificableException("La solicitud " + getId() + " ya se encuentra finalizada, por lo tanto no se pueden ejecutar más actividades sobre ella.");
         }
         if(!actividad.getEncargado().equals(empleadoAsignado) 
                 && !actividad.getEncargado().getRol().equals(RolEmpleado.ADMINISTRADOR)) {
             throw new PrivilegiosInsuficientesException(MENSAJE_PRIVILEGIOS_INSUFICIENTES);
         }
-        actividades.add(actividad);
+        getActividades().add(actividad);
     }
     
     public void finalizarSolicitud() throws SolicitudNoModificableException {
         if(estado == EstadoSolicitud.FINALIZADA) {
-            throw new SolicitudNoModificableException("La solicitud " + id + " ya se encuentra finalizada.");
+            throw new SolicitudNoModificableException("La solicitud " + getId() + " ya se encuentra finalizada.");
         }
         estado = EstadoSolicitud.FINALIZADA;
     }
-    
+
+    /**
+     * @return the estado
+     */
     public EstadoSolicitud getEstado() {
         return estado;
+    }
+
+    /**
+     * @return the id
+     */
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * @return the usuarioCreador
+     */
+    public Usuario getUsuarioCreador() {
+        return usuarioCreador;
+    }
+
+    /**
+     * @return the empleadoAsignado
+     */
+    public Empleado getEmpleadoAsignado() {
+        return empleadoAsignado;
+    }
+
+    /**
+     * @return the titulo
+     */
+    public String getTitulo() {
+        return titulo;
+    }
+
+    /**
+     * @return the descripcion
+     */
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    /**
+     * @return the actividades
+     */
+    public List<Actividad> getActividades() {
+        return actividades;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(long id) {
+        this.id = id;
     }
     
 }
