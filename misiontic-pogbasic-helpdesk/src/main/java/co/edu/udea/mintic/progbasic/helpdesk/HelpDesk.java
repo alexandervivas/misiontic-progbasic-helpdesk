@@ -7,7 +7,8 @@ package co.edu.udea.mintic.progbasic.helpdesk;
 
 import co.edu.udea.mintic.progbasic.helpdesk.dominio.Usuario;
 import co.edu.udea.mintic.progbasic.helpdesk.persistencia.Persistencia;
-import co.edu.udea.mintic.progbasic.helpdesk.persistencia.memoria.PersistenciaSolicitudes;
+import co.edu.udea.mintic.progbasic.helpdesk.persistencia.memoria.PersistenciaMemoriaSolicitudes;
+import co.edu.udea.mintic.progbasic.helpdesk.persistencia.mysql.PersistenciaMySQLSolicitudes;
 import co.edu.udea.mintic.progbasic.helpdesk.ui.CrearSolicitudForm;
 import co.edu.udea.mintic.progbasic.helpdesk.ui.SolicitudesForm;
 import co.edu.udea.mintic.progbasic.helpdesk.ui.VerSolicitudForm;
@@ -26,7 +27,7 @@ public class HelpDesk implements Suscriptor<EventoSolicitudesForm> {
         
     public HelpDesk(Usuario usuario) {
         
-        Persistencia persistencia = new PersistenciaSolicitudes();
+        Persistencia persistencia = new PersistenciaMySQLSolicitudes();
         
         formularioSolicitudes = new SolicitudesForm();
         formularioCrearSolicitud = new CrearSolicitudForm(usuario, persistencia);

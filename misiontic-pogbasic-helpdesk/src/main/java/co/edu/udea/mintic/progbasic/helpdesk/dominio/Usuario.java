@@ -11,8 +11,8 @@ package co.edu.udea.mintic.progbasic.helpdesk.dominio;
  */
 public class Usuario extends Persona {
     
-    public Usuario(String id, String nombre, String correo) {
-        super(id, nombre, correo);
+    public Usuario(long id, String cedula, String nombre, String correo) {
+        super(id, cedula, nombre, correo);
     }
     
 }

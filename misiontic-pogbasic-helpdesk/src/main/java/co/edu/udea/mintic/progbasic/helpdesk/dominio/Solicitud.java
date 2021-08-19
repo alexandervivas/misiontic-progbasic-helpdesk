@@ -26,6 +26,8 @@ public class Solicitud {
     
     
     private final static String MENSAJE_PRIVILEGIOS_INSUFICIENTES = "El empleado no tiene privilegios suficientes para realizar esta operación";
+    private final static String MENSAJE_SOLICITUD_NO_REASIGNABLE = "La solicitud no se puede reasignar puesto que ya se encuentra finalizada.";
+    private final static String MENSAJE_SOLICITUD_FINALIZADA = "La solicitud no se puede modificar puesto que ya se encuentra finalizada.";
     
     public Solicitud(Usuario usuarioCreador, String titulo, String descripcion) {
         estado = EstadoSolicitud.CREADA;
@@ -49,7 +51,7 @@ public class Solicitud {
     
     public void setEmpleadoAsignado(Empleado empleadoAsignado) throws SolicitudNoModificableException {
         if(estado == EstadoSolicitud.FINALIZADA) {
-            throw new SolicitudNoModificableException("La solicitud " + getId() + " no se puede reasignar puesto que ya se encuentra finalizada.");
+            throw new SolicitudNoModificableException(MENSAJE_SOLICITUD_NO_REASIGNABLE);
         }
         estado = EstadoSolicitud.ASIGNADA;
         this.empleadoAsignado = empleadoAsignado;
@@ -57,7 +59,7 @@ public class Solicitud {
     
     public void agregarActividad(Actividad actividad) throws SolicitudNoModificableException, PrivilegiosInsuficientesException {
         if(estado == EstadoSolicitud.FINALIZADA) {
-            throw new SolicitudNoModificableException("La solicitud " + getId() + " ya se encuentra finalizada, por lo tanto no se pueden ejecutar más actividades sobre ella.");
+            throw new SolicitudNoModificableException(MENSAJE_SOLICITUD_FINALIZADA);
         }
         if(!actividad.getEncargado().equals(empleadoAsignado) 
                 && !actividad.getEncargado().getRol().equals(RolEmpleado.ADMINISTRADOR)) {
@@ -68,7 +70,7 @@ public class Solicitud {
     
     public void finalizarSolicitud() throws SolicitudNoModificableException {
         if(estado == EstadoSolicitud.FINALIZADA) {
-            throw new SolicitudNoModificableException("La solicitud " + getId() + " ya se encuentra finalizada.");
+            throw new SolicitudNoModificableException(MENSAJE_SOLICITUD_FINALIZADA);
         }
         estado = EstadoSolicitud.FINALIZADA;
     }

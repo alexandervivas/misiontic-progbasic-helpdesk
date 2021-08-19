@@ -1,7 +1,6 @@
 
 import co.edu.udea.mintic.progbasic.helpdesk.HelpDesk;
 import co.edu.udea.mintic.progbasic.helpdesk.dominio.Usuario;
-import co.edu.udea.mintic.progbasic.helpdesk.ui.SolicitudesForm;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -28,18 +27,12 @@ public class Main {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SolicitudesForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SolicitudesForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SolicitudesForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SolicitudesForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         
-        new HelpDesk(new Usuario("CC1", "Alexander", "alex@mail.com"));
+        new HelpDesk(new Usuario(1, "CC1", "Alexander", "alex@mail.com"));
     }
     
 }

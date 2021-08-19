@@ -24,8 +24,8 @@ public class SolicitudTest {
     @Test
     public void asignaEmpleado() {
         
-        Empleado empleado = new Empleado("CC1", "Pepito", "pepito@mail.com", RolEmpleado.AUXILIAR);
-        Usuario usuarioCreador = new Usuario("CC2", "Juanito", "juanito@mail.com");
+        Empleado empleado = new Empleado(0, "CC1", "Pepito", "pepito@mail.com", RolEmpleado.AUXILIAR);
+        Usuario usuarioCreador = new Usuario(1, "CC2", "Juanito", "juanito@mail.com");
         
         Solicitud solicitud = new Solicitud(usuarioCreador, "Titulo", "me duele el pecho");
         
@@ -43,8 +43,8 @@ public class SolicitudTest {
     @Test
     public void noPuedeAgregarActividadEmpleado() {
         
-        Empleado empleado = new Empleado("CC1", "Pepito", "pepito@mail.com", RolEmpleado.AUXILIAR);
-        Usuario usuarioCreador = new Usuario("CC2", "Juanito", "juanito@mail.com");
+        Empleado empleado = new Empleado(0, "CC1", "Pepito", "pepito@mail.com", RolEmpleado.AUXILIAR);
+        Usuario usuarioCreador = new Usuario(1, "CC2", "Juanito", "juanito@mail.com");
         
         Solicitud solicitud = new Solicitud(usuarioCreador, "Titulo", "me duele el pecho");
         
@@ -62,7 +62,7 @@ public class SolicitudTest {
             fail("La solicitud no se pudo modificar");
         }
         
-        Empleado empleado2 = new Empleado("CC2", "Pablito", "pablito@mail.com", RolEmpleado.AUXILIAR);
+        Empleado empleado2 = new Empleado(2, "CC2", "Pablito", "pablito@mail.com", RolEmpleado.AUXILIAR);
         Actividad actividad2 = new Actividad("blablabla", empleado2);
         
         assertThrows("Debe lanzar excepcion si alguien no autorizado trata de agregar una actividad", 
@@ -71,7 +71,7 @@ public class SolicitudTest {
                     solicitud.agregarActividad(actividad2);
                 });
         
-        Empleado administrador = new Empleado("CC3", "Jesus", "jesus@mail.com", RolEmpleado.ADMINISTRADOR);
+        Empleado administrador = new Empleado(3, "CC3", "Jesus", "jesus@mail.com", RolEmpleado.ADMINISTRADOR);
         Actividad actividad3 = new Actividad("blablabla", administrador);
         
         try {

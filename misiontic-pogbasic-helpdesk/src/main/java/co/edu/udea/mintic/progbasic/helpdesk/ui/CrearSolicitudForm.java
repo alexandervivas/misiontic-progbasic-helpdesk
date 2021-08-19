@@ -159,6 +159,7 @@ public class CrearSolicitudForm extends javax.swing.JFrame implements Publicador
             notificarEvento(evento);
             
         } catch (EntidadNoCreadaException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         

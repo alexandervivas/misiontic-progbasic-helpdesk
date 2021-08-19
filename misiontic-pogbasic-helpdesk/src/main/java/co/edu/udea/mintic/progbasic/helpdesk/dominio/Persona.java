@@ -11,12 +11,14 @@ package co.edu.udea.mintic.progbasic.helpdesk.dominio;
  */
 public abstract class Persona {
     
-    private String id;
+    private long id;
+    private String cedula;
     private String nombre;
     private String correo;
     
-    public Persona(String id, String nombre, String correo) {
+    public Persona(long id, String cedula, String nombre, String correo) {
         this.id = id;
+        this.cedula = cedula;
         this.nombre = nombre;
         this.correo = correo;
     }
@@ -24,8 +26,15 @@ public abstract class Persona {
     /**
      * @return the id
      */
-    public String getId() {
+    public long getId() {
         return id;
+    }
+
+    /**
+     * @return the cedula
+     */
+    public String getCedula() {
+        return cedula;
     }
 
     /**

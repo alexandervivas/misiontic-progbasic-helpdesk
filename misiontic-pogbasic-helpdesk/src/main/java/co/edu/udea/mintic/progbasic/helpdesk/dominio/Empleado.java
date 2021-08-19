@@ -13,12 +13,12 @@ public class Empleado extends Persona {
     
     private RolEmpleado rol;
     
-    public Empleado(String id, String nombre, String correo) {
-        super(id, nombre, correo);
+    public Empleado(long id, String cedula, String nombre, String correo) {
+        super(id, cedula, nombre, correo);
     }
     
-    public Empleado(String id, String nombre, String correo, RolEmpleado rol) {
-        super(id, nombre, correo);
+    public Empleado(long id, String cedula, String nombre, String correo, RolEmpleado rol) {
+        super(id, cedula, nombre, correo);
         this.rol = rol;
     }
     

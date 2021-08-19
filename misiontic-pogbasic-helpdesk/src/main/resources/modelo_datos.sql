@@ -60,3 +60,5 @@ CREATE TABLE actividades (
         FOREIGN KEY (id_solicitud) 
         REFERENCES solicitudes(id_solicitud)
 );
+
+INSERT INTO usuarios (cedula, nombre, correo) VALUES ('CC1', 'Alexander', 'alex@mail.com');

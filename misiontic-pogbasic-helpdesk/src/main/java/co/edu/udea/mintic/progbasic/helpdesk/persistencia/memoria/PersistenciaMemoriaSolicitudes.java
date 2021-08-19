@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author alexandervivas
  */
-public class PersistenciaSolicitudes implements Persistencia<Long, Solicitud> {
+public class PersistenciaMemoriaSolicitudes implements Persistencia<Long, Solicitud> {
     
     private final List<Solicitud> db = new ArrayList<>();
     
