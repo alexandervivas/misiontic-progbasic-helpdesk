@@ -46,7 +46,6 @@ public class PersistenciaMySQLSolicitudes implements Persistencia<Long, Solicitu
             Class.forName(myDriver);
             conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + puerto + "/" + nombreBD, usuario, password);
         } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
         }
     }
     
@@ -57,25 +56,22 @@ public class PersistenciaMySQLSolicitudes implements Persistencia<Long, Solicitu
         
         try {
             
-            Statement statement = conexion.createStatement();
-            
-            String query = "INSERT INTO solicitudes (titulo, descripcion, estado, usuario_creador) "
-                    + "VALUES ("
-                    + "'" + solicitud.getTitulo() + "', "
-                    + "'" + solicitud.getDescripcion() + "', "
-                    + "'" + solicitud.getEstado().toString() + "', "
-                    + "'" + solicitud.getUsuarioCreador().getId() + "'"
-                    + ");";
-            
-            int registros = statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-            
-            ResultSet resultSet = statement.getGeneratedKeys();
-            if (resultSet.next()){
-                idGenerado = resultSet.getLong(1);
+            int registros;
+            try (Statement statement = conexion.createStatement()) {
+                String query = "INSERT INTO solicitudes (titulo, descripcion, estado, usuario_creador) "
+                        + "VALUES ("
+                        + "'" + solicitud.getTitulo() + "', "
+                        + "'" + solicitud.getDescripcion() + "', "
+                        + "'" + solicitud.getEstado().toString() + "', "
+                        + "'" + solicitud.getUsuarioCreador().getId() + "'"
+                        + ");";
+                registros = statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+                try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                    if (resultSet.next()){
+                        idGenerado = resultSet.getLong(1);
+                    }
+                }
             }
-            resultSet.close();
-            
-            statement.close();
             
             if(registros == 0) {
                 throw new EntidadNoCreadaException(ENTIDAD_NO_CREADA);
@@ -93,31 +89,29 @@ public class PersistenciaMySQLSolicitudes implements Persistencia<Long, Solicitu
         Solicitud solicitud = null;
         try {
             
-            Statement statement = conexion.createStatement();
-            
-            String query = "SELECT "
-                    + "titulo, "
-                    + "descripcion, "
-                    + "estado "
-                    + "FROM solicitudes "
-                    + "WHERE id_solicitud = " + id + ";";
-            
-            ResultSet resultSet = statement.executeQuery(query);
-            
-            while(resultSet.next()) {
-                solicitud = new Solicitud(
-                    id, 
-                    EstadoSolicitud.fromString(resultSet.getString("estado")), 
-                    null, 
-                    null, 
-                    resultSet.getString("titulo"), 
-                    resultSet.getString("descripcion"), 
-                    null);
+            try (Statement statement = conexion.createStatement()) {
+                String query = "SELECT "
+                        + "titulo, "
+                        + "descripcion, "
+                        + "estado "
+                        + "FROM solicitudes "
+                        + "WHERE id_solicitud = " + id + ";";
                 
+                ResultSet resultSet = statement.executeQuery(query);
                 
+                while(resultSet.next()) {
+                    solicitud = new Solicitud(
+                            id,
+                            EstadoSolicitud.fromString(resultSet.getString("estado")),
+                            null,
+                            null,
+                            resultSet.getString("titulo"),
+                            resultSet.getString("descripcion"),
+                            null);
+                    
+                    
+                }
             }
-            
-            statement.close();
             
         } catch (SQLException ex) {
             throw new EntidadNoEncontradaException(ENTIDAD_NO_ENCONTRADA, ex);
@@ -130,16 +124,14 @@ public class PersistenciaMySQLSolicitudes implements Persistencia<Long, Solicitu
     public void actualizar(Solicitud solicitud) throws EntidadNoActualizadaException {
         try {
             
-            Statement statement = conexion.createStatement();
-            
-            String query = "UPDATE solicitudes set "
-                    + "titulo = '" + solicitud.getTitulo() + "', "
-                    + "descripcion = '" + solicitud.getDescripcion() + "' "
-                    + "WHERE id_solicitud = " + solicitud.getId() + ";";
-            
-            int registros = statement.executeUpdate(query);
-            
-            statement.close();
+            int registros;
+            try (Statement statement = conexion.createStatement()) {
+                String query = "UPDATE solicitudes set "
+                        + "titulo = '" + solicitud.getTitulo() + "', "
+                        + "descripcion = '" + solicitud.getDescripcion() + "' "
+                        + "WHERE id_solicitud = " + solicitud.getId() + ";";
+                registros = statement.executeUpdate(query);
+            }
             
             if(registros == 0) {
                 throw new EntidadNoActualizadaException(ENTIDAD_NO_ACTUALIZADA);
@@ -154,14 +146,12 @@ public class PersistenciaMySQLSolicitudes implements Persistencia<Long, Solicitu
     public void borrar(Long id) throws EntidadNoEliminadaException {
         try {
             
-            Statement statement = conexion.createStatement();
-            
-            String query = "DELETE FROM solicitudes "
-                    + "WHERE id_solicitud = " + id + ";";
-            
-            int registros = statement.executeUpdate(query);
-            
-            statement.close();
+            int registros;
+            try (Statement statement = conexion.createStatement()) {
+                String query = "DELETE FROM solicitudes "
+                        + "WHERE id_solicitud = " + id + ";";
+                registros = statement.executeUpdate(query);
+            }
             
             if(registros == 0) {
                 throw new EntidadNoEliminadaException(ENTIDAD_NO_ELIMINADA);
@@ -177,31 +167,29 @@ public class PersistenciaMySQLSolicitudes implements Persistencia<Long, Solicitu
         List<Solicitud> solicitudes = new ArrayList<>();
         try {
             
-            Statement statement = conexion.createStatement();
-            
-            String query = "SELECT "
-                    + "id_solicitud, "
-                    + "titulo, "
-                    + "descripcion, "
-                    + "estado "
-                    + "FROM solicitudes;";
-            
-            ResultSet resultSet = statement.executeQuery(query);
-            
-            while(resultSet.next()) {
-                Solicitud solicitud = new Solicitud(
-                        resultSet.getLong("id_solicitud"), 
-                        EstadoSolicitud.fromString(resultSet.getString("estado")), 
-                        null, 
-                        null, 
-                        resultSet.getString("titulo"), 
-                        resultSet.getString("descripcion"), 
-                        null);
+            try (Statement statement = conexion.createStatement()) {
+                String query = "SELECT "
+                        + "id_solicitud, "
+                        + "titulo, "
+                        + "descripcion, "
+                        + "estado "
+                        + "FROM solicitudes;";
                 
-                solicitudes.add(solicitud);
+                try (ResultSet resultSet = statement.executeQuery(query)) {
+                    while(resultSet.next()) {
+                        Solicitud solicitud = new Solicitud(
+                                resultSet.getLong("id_solicitud"),
+                                EstadoSolicitud.fromString(resultSet.getString("estado")),
+                                null,
+                                null,
+                                resultSet.getString("titulo"),
+                                resultSet.getString("descripcion"),
+                                null);
+                        
+                        solicitudes.add(solicitud);
+                    }
+                }
             }
-            
-            statement.close();
             
         } catch (SQLException ex) {
             ex.printStackTrace();
