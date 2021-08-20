@@ -29,7 +29,7 @@ public class HelpDesk implements Suscriptor<EventoSolicitudesForm> {
         
         Persistencia persistencia = new PersistenciaMySQLSolicitudes();
         
-        formularioSolicitudes = new SolicitudesForm();
+        formularioSolicitudes = new SolicitudesForm(persistencia);
         formularioCrearSolicitud = new CrearSolicitudForm(usuario, persistencia);
         formularioVerSolicitud = new VerSolicitudForm(usuario, persistencia);
         

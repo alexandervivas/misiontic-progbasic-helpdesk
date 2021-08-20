@@ -6,6 +6,7 @@
 package co.edu.udea.mintic.progbasic.helpdesk.persistencia.memoria;
 
 import co.edu.udea.mintic.progbasic.helpdesk.dominio.Solicitud;
+import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoActualizadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoCreadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoEliminadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoEncontradaException;
@@ -25,7 +26,7 @@ public class PersistenciaMemoriaSolicitudes implements Persistencia<Long, Solici
     public final static String ENTIDAD_NO_ELIMINADA = "La entidad no se pudo borrarr de la base de datos";
 
     @Override
-    public void crear(Solicitud entidad) throws EntidadNoCreadaException {
+    public Long crear(Solicitud entidad) throws EntidadNoCreadaException {
         long id = 0;
         
         if(db.size() > 0) {
@@ -35,6 +36,8 @@ public class PersistenciaMemoriaSolicitudes implements Persistencia<Long, Solici
         entidad.setId(id);
         
         db.add(entidad);
+        
+        return id;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class PersistenciaMemoriaSolicitudes implements Persistencia<Long, Solici
     }
 
     @Override
-    public long actualizar(Solicitud entidad) {
+    public void actualizar(Solicitud entidad) throws EntidadNoActualizadaException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -5,15 +5,19 @@
  */
 package co.edu.udea.mintic.progbasic.helpdesk.persistencia.mysql;
 
+import co.edu.udea.mintic.progbasic.helpdesk.dominio.EstadoSolicitud;
 import co.edu.udea.mintic.progbasic.helpdesk.dominio.Solicitud;
+import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoActualizadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoCreadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoEliminadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoEncontradaException;
 import co.edu.udea.mintic.progbasic.helpdesk.persistencia.Persistencia;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +30,9 @@ public class PersistenciaMySQLSolicitudes implements Persistencia<Long, Solicitu
     private Connection conexion;
     
     public final static String ENTIDAD_NO_CREADA = "La entidad no se pudo crear en la base de datos";
+    public final static String ENTIDAD_NO_ELIMINADA = "La entidad no se pudo borrar de la base de datos";
+    public final static String ENTIDAD_NO_ACTUALIZADA = "La entidad no se pudo actualizar en la base de datos";
+    public final static String ENTIDAD_NO_ENCONTRADA = "La entidad no existe en la base de datos";
     
     public PersistenciaMySQLSolicitudes() {
         String host = "sql11.freemysqlhosting.net";
@@ -45,17 +52,30 @@ public class PersistenciaMySQLSolicitudes implements Persistencia<Long, Solicitu
     
 
     @Override
-    public void crear(Solicitud solicitud) throws EntidadNoCreadaException {
+    public Long crear(Solicitud solicitud) throws EntidadNoCreadaException {
+        long idGenerado = 0;
+        
         try {
             
             Statement statement = conexion.createStatement();
             
-            int registros = statement.executeUpdate("INSERT INTO solicitudes (titulo, descripcion, usuario_creador) VALUES ('" + 
-                    solicitud.getTitulo() + "', '" + 
-                    solicitud.getDescripcion() + "', '" + 
-                    solicitud.getUsuarioCreador().getId() + "');");
+            String query = "INSERT INTO solicitudes (titulo, descripcion, estado, usuario_creador) "
+                    + "VALUES ("
+                    + "'" + solicitud.getTitulo() + "', "
+                    + "'" + solicitud.getDescripcion() + "', "
+                    + "'" + solicitud.getEstado().toString() + "', "
+                    + "'" + solicitud.getUsuarioCreador().getId() + "'"
+                    + ");";
             
-            conexion.close();
+            int registros = statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+            
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()){
+                idGenerado = resultSet.getLong(1);
+            }
+            resultSet.close();
+            
+            statement.close();
             
             if(registros == 0) {
                 throw new EntidadNoCreadaException(ENTIDAD_NO_CREADA);
@@ -64,26 +84,130 @@ public class PersistenciaMySQLSolicitudes implements Persistencia<Long, Solicitu
         } catch (SQLException ex) {
             throw new EntidadNoCreadaException(ENTIDAD_NO_CREADA, ex);
         }
+        
+        return idGenerado;
     }
 
     @Override
     public Solicitud leer(Long id) throws EntidadNoEncontradaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Solicitud solicitud = null;
+        try {
+            
+            Statement statement = conexion.createStatement();
+            
+            String query = "SELECT "
+                    + "titulo, "
+                    + "descripcion, "
+                    + "estado "
+                    + "FROM solicitudes "
+                    + "WHERE id_solicitud = " + id + ";";
+            
+            ResultSet resultSet = statement.executeQuery(query);
+            
+            while(resultSet.next()) {
+                solicitud = new Solicitud(
+                    id, 
+                    EstadoSolicitud.fromString(resultSet.getString("estado")), 
+                    null, 
+                    null, 
+                    resultSet.getString("titulo"), 
+                    resultSet.getString("descripcion"), 
+                    null);
+                
+                
+            }
+            
+            statement.close();
+            
+        } catch (SQLException ex) {
+            throw new EntidadNoEncontradaException(ENTIDAD_NO_ENCONTRADA, ex);
+        }
+        
+        return solicitud;
     }
 
     @Override
-    public long actualizar(Solicitud entidad) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void actualizar(Solicitud solicitud) throws EntidadNoActualizadaException {
+        try {
+            
+            Statement statement = conexion.createStatement();
+            
+            String query = "UPDATE solicitudes set "
+                    + "titulo = '" + solicitud.getTitulo() + "', "
+                    + "descripcion = '" + solicitud.getDescripcion() + "' "
+                    + "WHERE id_solicitud = " + solicitud.getId() + ";";
+            
+            int registros = statement.executeUpdate(query);
+            
+            statement.close();
+            
+            if(registros == 0) {
+                throw new EntidadNoActualizadaException(ENTIDAD_NO_ACTUALIZADA);
+            }
+            
+        } catch (SQLException ex) {
+            throw new EntidadNoActualizadaException(ENTIDAD_NO_ACTUALIZADA, ex);
+        }
     }
 
     @Override
     public void borrar(Long id) throws EntidadNoEliminadaException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            
+            Statement statement = conexion.createStatement();
+            
+            String query = "DELETE FROM solicitudes "
+                    + "WHERE id_solicitud = " + id + ";";
+            
+            int registros = statement.executeUpdate(query);
+            
+            statement.close();
+            
+            if(registros == 0) {
+                throw new EntidadNoEliminadaException(ENTIDAD_NO_ELIMINADA);
+            }
+            
+        } catch (SQLException ex) {
+            throw new EntidadNoEliminadaException(ENTIDAD_NO_ELIMINADA, ex);
+        }
     }
 
     @Override
     public List<Solicitud> listar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Solicitud> solicitudes = new ArrayList<>();
+        try {
+            
+            Statement statement = conexion.createStatement();
+            
+            String query = "SELECT "
+                    + "id_solicitud, "
+                    + "titulo, "
+                    + "descripcion, "
+                    + "estado "
+                    + "FROM solicitudes;";
+            
+            ResultSet resultSet = statement.executeQuery(query);
+            
+            while(resultSet.next()) {
+                Solicitud solicitud = new Solicitud(
+                        resultSet.getLong("id_solicitud"), 
+                        EstadoSolicitud.fromString(resultSet.getString("estado")), 
+                        null, 
+                        null, 
+                        resultSet.getString("titulo"), 
+                        resultSet.getString("descripcion"), 
+                        null);
+                
+                solicitudes.add(solicitud);
+            }
+            
+            statement.close();
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+        return solicitudes;
     }
     
 }

@@ -5,13 +5,18 @@
  */
 package co.edu.udea.mintic.progbasic.helpdesk.ui;
 
+import co.edu.udea.mintic.progbasic.helpdesk.dominio.Solicitud;
 import co.edu.udea.mintic.progbasic.helpdesk.dominio.eventos.EventoSolicitud;
+import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoEncontradaException;
+import co.edu.udea.mintic.progbasic.helpdesk.persistencia.Persistencia;
 import co.edu.udea.mintic.progbasic.helpdesk.ui.eventos.EventoSolicitudesForm;
 import co.edu.udea.mintic.progbasic.helpdesk.ui.eventos.TipoEventoSolicitudesForm;
 import co.edu.udea.mintic.progbasic.helpdesk.util.Publicador;
 import co.edu.udea.mintic.progbasic.helpdesk.util.Suscriptor;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,12 +26,17 @@ import javax.swing.table.DefaultTableModel;
 public class SolicitudesForm extends javax.swing.JFrame implements Publicador<EventoSolicitudesForm>, Suscriptor<EventoSolicitud> {
 
     private List<Suscriptor<EventoSolicitudesForm>> suscriptores = new ArrayList<>();
+    private Persistencia<Long, Solicitud> persistencia;
     
     /**
      * Creates new form SolicitudesForm
      */
-    public SolicitudesForm() {
+    public SolicitudesForm(Persistencia<Long, Solicitud> persistencia) {
         initComponents();
+        
+        this.persistencia = persistencia;
+        
+        cargarModeloInicial();
     }
 
     /**
@@ -55,7 +65,21 @@ public class SolicitudesForm extends javax.swing.JFrame implements Publicador<Ev
             new String [] {
                 "ID", "Título", "Descripción", "Estado", "Asignado"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaSolicitudes.getTableHeader().setReorderingAllowed(false);
+        tablaSolicitudes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaSolicitudesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaSolicitudes);
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 36)); // NOI18N
@@ -115,6 +139,24 @@ public class SolicitudesForm extends javax.swing.JFrame implements Publicador<Ev
         suscriptores.forEach((suscriptor) -> suscriptor.recibirEvento(new EventoSolicitudesForm(TipoEventoSolicitudesForm.CREAR)));
     }//GEN-LAST:event_miNuevaSolicitudActionPerformed
 
+    private void tablaSolicitudesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaSolicitudesMouseClicked
+        // si se hace doble clic con el boton izquierdo del mouse
+        if(SwingUtilities.isLeftMouseButton(evt) && evt.getClickCount() == 2) {
+            
+            long id = (long) tablaSolicitudes.getValueAt(tablaSolicitudes.getSelectedRow(), 0);
+            
+            try {
+                
+                Solicitud solicitud = persistencia.leer(id);
+                suscriptores.forEach((suscriptor) -> suscriptor.recibirEvento(new EventoSolicitudesForm(TipoEventoSolicitudesForm.VER, solicitud)));
+                
+            } catch (EntidadNoEncontradaException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        }
+    }//GEN-LAST:event_tablaSolicitudesMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
@@ -170,6 +212,24 @@ public class SolicitudesForm extends javax.swing.JFrame implements Publicador<Ev
                     }
                 }
             } break;
+        }
+    }
+    
+    private void cargarModeloInicial() {
+        DefaultTableModel modelo = (DefaultTableModel) tablaSolicitudes.getModel();
+        for(Solicitud solicitud : persistencia.listar()) {
+            String empleadoAsignado = "";
+            if(solicitud.getEmpleadoAsignado() != null) {
+                empleadoAsignado = solicitud.getEmpleadoAsignado().getNombre();
+            }
+                
+            modelo.addRow(new Object[] {
+                solicitud.getId(),
+                solicitud.getTitulo(),
+                solicitud.getDescripcion(),
+                solicitud.getEstado(),
+                empleadoAsignado
+            });
         }
     }
 

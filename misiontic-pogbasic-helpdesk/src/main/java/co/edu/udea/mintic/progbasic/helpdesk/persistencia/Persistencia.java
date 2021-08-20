@@ -5,6 +5,7 @@
  */
 package co.edu.udea.mintic.progbasic.helpdesk.persistencia;
 
+import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoActualizadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoCreadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoEliminadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoEncontradaException;
@@ -16,9 +17,9 @@ import java.util.List;
  */
 public interface Persistencia<I, E> {
     
-    public void crear(E entidad) throws EntidadNoCreadaException;
+    public I crear(E entidad) throws EntidadNoCreadaException;
     public E leer(I id) throws EntidadNoEncontradaException;
-    public long actualizar(E entidad);
+    public void actualizar(E entidad) throws EntidadNoActualizadaException;
     public void borrar(I id) throws EntidadNoEliminadaException;
     public List<E> listar();
     

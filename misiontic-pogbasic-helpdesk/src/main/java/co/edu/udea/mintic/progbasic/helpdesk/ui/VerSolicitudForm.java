@@ -9,6 +9,7 @@ import co.edu.udea.mintic.progbasic.helpdesk.dominio.Solicitud;
 import co.edu.udea.mintic.progbasic.helpdesk.dominio.Usuario;
 import co.edu.udea.mintic.progbasic.helpdesk.dominio.eventos.EventoSolicitud;
 import co.edu.udea.mintic.progbasic.helpdesk.dominio.eventos.EventoSolicitudTipo;
+import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoActualizadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.util.Publicador;
 import co.edu.udea.mintic.progbasic.helpdesk.util.Suscriptor;
 import co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia.EntidadNoCreadaException;
@@ -158,22 +159,27 @@ public class VerSolicitudForm extends javax.swing.JFrame implements Publicador<E
 
     private void bEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEnviarActionPerformed
         
-        Solicitud solicitud = new Solicitud(
-                usuario, 
+        Solicitud solicitudActualizada = new Solicitud(
+                solicitud.getId(), 
+                solicitud.getEstado(), 
+                solicitud.getUsuarioCreador(), 
+                solicitud.getEmpleadoAsignado(), 
                 tfTitulo.getText(), 
-                taDescripcion.getText());
+                taDescripcion.getText(), 
+                solicitud.getActividades());
         
         try {
             
-            persistencia.crear(solicitud);
+            persistencia.actualizar(solicitudActualizada);
             
             EventoSolicitud evento = new EventoSolicitud(
                 EventoSolicitudTipo.SOLICITUD_ACTUALIZADA, 
-                solicitud);
+                solicitudActualizada);
         
             notificarEvento(evento);
             
-        } catch (EntidadNoCreadaException ex) {
+        } catch (EntidadNoActualizadaException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         

@@ -9,13 +9,13 @@ package co.edu.udea.mintic.progbasic.helpdesk.excepciones.persistencia;
  *
  * @author alexandervivas
  */
-public class EntidadNoEncontradaException extends Exception {
+public class EntidadNoActualizadaException extends Exception {
     
-    public EntidadNoEncontradaException(String mensaje) {
+    public EntidadNoActualizadaException(String mensaje) {
         super(mensaje);
     }
     
-    public EntidadNoEncontradaException(String mensaje, Exception excepcion) {
+    public EntidadNoActualizadaException(String mensaje, Exception excepcion) {
         super(mensaje, excepcion);
     }
     

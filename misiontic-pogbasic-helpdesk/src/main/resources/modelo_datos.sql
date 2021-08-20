@@ -36,7 +36,7 @@ CREATE TABLE solicitudes (
     id_solicitud MEDIUMINT NOT NULL AUTO_INCREMENT,
     titulo VARCHAR(100) NOT NULL,
     descripcion TEXT NOT NULL,
-    correo VARCHAR(150),
+    estado VARCHAR(150),
     usuario_creador MEDIUMINT NOT NULL,
     CONSTRAINT pk_solicitudes 
         PRIMARY KEY(id_solicitud),

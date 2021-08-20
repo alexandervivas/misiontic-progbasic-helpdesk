@@ -11,6 +11,15 @@ package co.edu.udea.mintic.progbasic.helpdesk.dominio;
  */
 public enum EstadoSolicitud {
     
-    CREADA, ASIGNADA, FINALIZADA
+    CREADA, ASIGNADA, FINALIZADA;
+    
+    public static EstadoSolicitud fromString(String estadoSolicitud) {
+        switch(estadoSolicitud) {
+            case "CREADA" : return CREADA;
+            case "ASIGNADA" : return ASIGNADA;
+            case "FINALIZADA" : return FINALIZADA;
+        }
+        return null;
+    }
     
 }

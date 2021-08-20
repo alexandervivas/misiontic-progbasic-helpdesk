@@ -25,12 +25,12 @@ public class CrearSolicitudForm extends javax.swing.JFrame implements Publicador
     
     private List<Suscriptor<EventoSolicitud>> suscriptores = new ArrayList<>();
     private Usuario usuario;
-    private Persistencia persistencia;
+    private Persistencia<Long, Solicitud> persistencia;
 
     /**
      * Creates new form SolicitudForm
      */
-    public CrearSolicitudForm(Usuario usuario, Persistencia persistencia) {
+    public CrearSolicitudForm(Usuario usuario, Persistencia<Long, Solicitud> persistencia) {
         initComponents();
         
         this.usuario = usuario;
@@ -150,7 +150,7 @@ public class CrearSolicitudForm extends javax.swing.JFrame implements Publicador
         
         try {
             
-            persistencia.crear(solicitud);
+            solicitud.setId(persistencia.crear(solicitud));
             
             EventoSolicitud evento = new EventoSolicitud(
                 EventoSolicitudTipo.SOLICITUD_CREADA, 
