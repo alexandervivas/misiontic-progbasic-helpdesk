@@ -1,6 +1,6 @@
 
-import co.edu.udea.mintic.progbasic.helpdesk.HelpDesk;
-import co.edu.udea.mintic.progbasic.helpdesk.dominio.Usuario;
+import co.edu.udea.mintic.progbasic.helpdesk.v2.controlador.ControladorSolicitudes;
+import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.dominio.Usuario;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -32,7 +32,8 @@ public class Main {
         }
         //</editor-fold>
         
-        new HelpDesk(new Usuario(1, "CC1", "Alexander", "alex@mail.com"));
+        ControladorSolicitudes controlador = new ControladorSolicitudes(new Usuario(1, "CC1", "Alexander", "alex@mail.com"));
+        controlador.iniciar();
     }
     
 }

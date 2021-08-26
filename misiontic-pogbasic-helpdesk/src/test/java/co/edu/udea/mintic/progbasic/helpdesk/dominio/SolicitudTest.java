@@ -5,8 +5,14 @@
  */
 package co.edu.udea.mintic.progbasic.helpdesk.dominio;
 
-import co.edu.udea.mintic.progbasic.helpdesk.excepciones.solicitud.PrivilegiosInsuficientesException;
-import co.edu.udea.mintic.progbasic.helpdesk.excepciones.solicitud.SolicitudNoModificableException;
+import co.edu.udea.mintic.progbasic.helpdesk.v1.dominio.Actividad;
+import co.edu.udea.mintic.progbasic.helpdesk.v1.dominio.EstadoSolicitud;
+import co.edu.udea.mintic.progbasic.helpdesk.v1.dominio.Solicitud;
+import co.edu.udea.mintic.progbasic.helpdesk.v1.dominio.Usuario;
+import co.edu.udea.mintic.progbasic.helpdesk.v1.dominio.RolEmpleado;
+import co.edu.udea.mintic.progbasic.helpdesk.v1.dominio.Empleado;
+import co.edu.udea.mintic.progbasic.helpdesk.v1.excepciones.solicitud.PrivilegiosInsuficientesException;
+import co.edu.udea.mintic.progbasic.helpdesk.v1.excepciones.solicitud.SolicitudNoModificableException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Assert;
