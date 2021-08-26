@@ -7,7 +7,7 @@ package co.edu.udea.mintic.progbasic.helpdesk.v2.controlador;
 
 import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.ModeloSolicitudes;
 import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.dominio.Usuario;
-import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.dominio.eventos.EventoSolicitud;
+import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.dominio.eventos.EventoModeloSolicitud;
 import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.excepciones.persistencia.EntidadNoCreadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.v2.util.Suscriptor;
 import co.edu.udea.mintic.progbasic.helpdesk.v2.vista.VistaCrearSolicitud;
@@ -48,8 +48,8 @@ public class ControladorSolicitudes implements Suscriptor {
     @Override
     public void recibirEvento(Object evento) {
         // instanceof permite validar si un objeto es una instancia de una clase específica
-        if(evento instanceof EventoSolicitud) {
-            procesarEvento((EventoSolicitud) evento);
+        if(evento instanceof EventoModeloSolicitud) {
+            procesarEvento((EventoModeloSolicitud) evento);
         }
         
         if(evento instanceof EventoVistaSolicitudes) {
@@ -57,10 +57,19 @@ public class ControladorSolicitudes implements Suscriptor {
         }
     }
     
-    private void procesarEvento(EventoSolicitud eventoSolicitud) {
-        switch(eventoSolicitud.getTipo()) {
+    private void procesarEvento(EventoModeloSolicitud eventoModeloSolicitud) {
+        switch(eventoModeloSolicitud.getTipo()) {
             case SOLICITUD_CREADA: {
-                System.out.println("Solicitud creada: " + eventoSolicitud.getSolicitud());
+                System.out.println("Solicitud creada: " + eventoModeloSolicitud.getSolicitud());
+                vistaListadoSolicitudes.agregarSolicitud(eventoModeloSolicitud.getSolicitud());
+            } break;
+            case SOLICITUD_ACTUALIZADA: {
+                System.out.println("Solicitud actualizada: " + eventoModeloSolicitud.getSolicitud());
+                vistaListadoSolicitudes.actualizarSolicitud(eventoModeloSolicitud.getSolicitud());
+            } break;
+            case SOLICITUD_ELIMINADA: {
+                System.out.println("Solicitud creada: " + eventoModeloSolicitud.getSolicitud());
+                vistaListadoSolicitudes.eliminarSolicitud(eventoModeloSolicitud.getSolicitud());
             } break;
         }
     }

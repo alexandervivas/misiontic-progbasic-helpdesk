@@ -11,12 +11,12 @@ import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.dominio.Solicitud;
  *
  * @author alexandervivas
  */
-public class EventoSolicitud {
+public class EventoModeloSolicitud {
     
     private EventoSolicitudTipo tipo;
     private Solicitud solicitud;
     
-    public EventoSolicitud(EventoSolicitudTipo tipo, Solicitud solicitud) {
+    public EventoModeloSolicitud(EventoSolicitudTipo tipo, Solicitud solicitud) {
         this.tipo = tipo;
         this.solicitud = solicitud;
     }

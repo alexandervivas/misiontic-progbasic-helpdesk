@@ -6,7 +6,7 @@
 package co.edu.udea.mintic.progbasic.helpdesk.v2.modelo;
 
 import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.dominio.Solicitud;
-import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.dominio.eventos.EventoSolicitud;
+import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.dominio.eventos.EventoModeloSolicitud;
 import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.dominio.eventos.EventoSolicitudTipo;
 import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.excepciones.persistencia.EntidadNoCreadaException;
 import co.edu.udea.mintic.progbasic.helpdesk.v2.modelo.persistencia.Persistencia;
@@ -20,10 +20,10 @@ import java.util.List;
  *
  * @author alexandervivas
  */
-public class ModeloSolicitudes implements Publicador<EventoSolicitud>{
+public class ModeloSolicitudes implements Publicador<EventoModeloSolicitud>{
     
     private Persistencia<Long, Solicitud> persistencia;
-    private List<Suscriptor<EventoSolicitud>> suscriptores;
+    private List<Suscriptor<EventoModeloSolicitud>> suscriptores;
     
     public ModeloSolicitudes() {
         persistencia = new PersistenciaMySQLSolicitudes();
@@ -37,16 +37,16 @@ public class ModeloSolicitudes implements Publicador<EventoSolicitud>{
     public void crearSolicitud(Solicitud solicitud) throws EntidadNoCreadaException {
         Long idSolicitud = persistencia.crear(solicitud);
         solicitud.setId(idSolicitud);
-        notificarEvento(new EventoSolicitud(EventoSolicitudTipo.SOLICITUD_CREADA, solicitud));
+        notificarEvento(new EventoModeloSolicitud(EventoSolicitudTipo.SOLICITUD_CREADA, solicitud));
     }
 
     @Override
-    public void agregarSuscriptor(Suscriptor<EventoSolicitud> suscriptor) {
+    public void agregarSuscriptor(Suscriptor<EventoModeloSolicitud> suscriptor) {
         suscriptores.add(suscriptor);
     }
 
     @Override
-    public void notificarEvento(EventoSolicitud evento) {
+    public void notificarEvento(EventoModeloSolicitud evento) {
         suscriptores.forEach((suscriptor) -> suscriptor.recibirEvento(evento));
     }
     

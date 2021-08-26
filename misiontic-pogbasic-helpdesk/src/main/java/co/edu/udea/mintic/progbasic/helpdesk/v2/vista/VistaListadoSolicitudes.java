@@ -173,4 +173,41 @@ public class VistaListadoSolicitudes extends javax.swing.JFrame implements Publi
         suscriptores.forEach((suscriptor) -> suscriptor.recibirEvento(evento));
     }
 
+    public void agregarSolicitud(Solicitud solicitud) {
+        DefaultTableModel modelo = (DefaultTableModel) tablaSolicitudes.getModel();
+        String empleadoAsignado = "";
+        if(solicitud.getEmpleadoAsignado() != null) {
+            empleadoAsignado = solicitud.getEmpleadoAsignado().getNombre();
+        }
+
+        modelo.addRow(new Object[] {
+            solicitud.getId(),
+            solicitud.getTitulo(),
+            solicitud.getDescripcion(),
+            solicitud.getEstado(),
+            empleadoAsignado
+        });
+    }
+
+    public void actualizarSolicitud(Solicitud solicitud) {
+        DefaultTableModel modelo = (DefaultTableModel) tablaSolicitudes.getModel();
+        for(int i = 0; i < modelo.getRowCount(); i++) {
+            if(Long.valueOf(modelo.getValueAt(i, 0).toString()) == solicitud.getId()) {
+                modelo.setValueAt(solicitud.getTitulo(), i, 1);
+                modelo.setValueAt(solicitud.getDescripcion(), i, 2);
+                break;
+            }
+        }
+    }
+
+    public void eliminarSolicitud(Solicitud solicitud) {
+        DefaultTableModel modelo = (DefaultTableModel) tablaSolicitudes.getModel();
+        for(int i = 0; i < modelo.getRowCount(); i++) {
+            if(Long.valueOf(modelo.getValueAt(i, 0).toString()) == solicitud.getId()) {
+                modelo.removeRow(i);
+                break;
+            }
+        }
+    }
+
 }
